@@ -8,7 +8,7 @@ import java.util.Map;
 public abstract  class Tile {
     protected final int tileCoordinate;
 
-    private static final Map<Integer, emptyTile> EMPTY_TILES = creatAllPossiblyEmptyTiles();
+    private static final Map<Integer, emptyTile> EMPTY_TILES_CACHE = creatAllPossiblyEmptyTiles();
 
     private static Map<Integer, emptyTile> creatAllPossiblyEmptyTiles() {
         final Map<Integer, emptyTile> emptyTileMap = new HashMap<>();
@@ -19,7 +19,7 @@ public abstract  class Tile {
         return ImmutableMap.copyOf(emptyTileMap);
     }
     public static Tile creatTile(final int tileCoordinate, final Piece piece){
-        return piece != null? new OccupiedTile(tileCoordinate, piece) : EMPTY_TILES.get(tileCoordinate);
+        return piece != null? new OccupiedTile(tileCoordinate, piece) : EMPTY_TILES_CACHE.get(tileCoordinate);
     }
     private Tile(int tileCoordinate){
         this.tileCoordinate = tileCoordinate;
@@ -29,7 +29,7 @@ public abstract  class Tile {
     public abstract Piece getPiece();
 
     public static final class emptyTile extends Tile{
-        emptyTile(final int tileCoordinate){
+        private emptyTile(final int tileCoordinate){
             super(tileCoordinate);
         }
         @Override
@@ -44,7 +44,7 @@ public abstract  class Tile {
 
     public static final class OccupiedTile extends Tile{
         private final Piece pieceOnTile;
-        OccupiedTile(int tileCoordinate, Piece pieceOnTile){
+        private OccupiedTile(int tileCoordinate, Piece pieceOnTile){
             super(tileCoordinate);
             this.pieceOnTile = pieceOnTile;
         }
